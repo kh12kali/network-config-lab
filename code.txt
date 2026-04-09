@@ -1,0 +1,153 @@
+public class MyStringBuilder2 {
+    private char[] value;
+
+    public MyStringBuilder2() {
+        value = new char[0];
+    }
+
+    public MyStringBuilder2(char[] chars) {
+        value = new char[chars.length];
+        for (int i = 0; i < chars.length; i++) {
+            value[i] = chars[i];
+        }
+    }
+
+    public MyStringBuilder2(String s) {
+        value = new char[s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            value[i] = s.charAt(i);
+        }
+    }
+
+    public MyStringBuilder2 insert(int offset, MyStringBuilder2 s) {
+        if (offset < 0 || offset > value.length) return this;
+
+        char[] newValue = new char[value.length + s.value.length];
+
+        for (int i = 0; i < offset; i++) {
+            newValue[i] = value[i];
+        }
+
+        for (int i = 0; i < s.value.length; i++) {
+            newValue[offset + i] = s.value[i];
+        }
+
+        for (int i = offset; i < value.length; i++) {
+            newValue[i + s.value.length] = value[i];
+        }
+
+        value = newValue;
+        return this;
+    }
+
+    public MyStringBuilder2 reverse() {
+        char[] newValue = new char[value.length];
+        for (int i = 0; i < value.length; i++) {
+            newValue[i] = value[value.length - 1 - i];
+        }
+        value = newValue;
+        return this;
+    }
+
+    public MyStringBuilder2 substring(int begin) {
+        if (begin < 0 || begin >= value.length) return new MyStringBuilder2();
+
+        char[] newValue = new char[value.length - begin];
+        for (int i = begin; i < value.length; i++) {
+            newValue[i - begin] = value[i];
+        }
+        return new MyStringBuilder2(newValue);
+    }
+
+    public MyStringBuilder2 toUpperCase() {
+        char[] newValue = new char[value.length];
+        for (int i = 0; i < value.length; i++) {
+            if (value[i] >= 'a' && value[i] <= 'z') {
+                newValue[i] = (char) (value[i] - 32);
+            } else {
+                newValue[i] = value[i];
+            }
+        }
+        value = newValue;
+        return this;
+    }
+
+    public String toString() {
+        return new String(value);
+    }
+
+    // ==================== TESTING MAIN METHOD ====================
+    public static void main(String[] args) {
+        System.out.println("=== Testing MyStringBuilder2 ===\n");
+
+        // Test 1: Constructor with String
+        MyStringBuilder2 sb1 = new MyStringBuilder2("Hello");
+        System.out.println("Test 1 - Constructor with String:");
+        System.out.println("  sb1 = \"" + sb1 + "\"");
+        System.out.println();
+
+        // Test 2: Constructor with char array
+        char[] chars = {'W', 'o', 'r', 'l', 'd'};
+        MyStringBuilder2 sb2 = new MyStringBuilder2(chars);
+        System.out.println("Test 2 - Constructor with char[]:");
+        System.out.println("  sb2 = \"" + sb2 + "\"");
+        System.out.println();
+
+        // Test 3: insert()
+        System.out.println("Test 3 - insert():");
+        System.out.println("  Before insert: sb1 = \"" + sb1 + "\"");
+        sb1.insert(5, new MyStringBuilder2(" World"));
+        System.out.println("  After sb1.insert(5, \" World\"): \"" + sb1 + "\"");
+        System.out.println();
+
+        // Test 4: reverse()
+        System.out.println("Test 4 - reverse():");
+        MyStringBuilder2 sb3 = new MyStringBuilder2("Hello World");
+        System.out.println("  Before reverse: \"" + sb3 + "\"");
+        sb3.reverse();
+        System.out.println("  After reverse(): \"" + sb3 + "\"");
+        System.out.println();
+
+        // Test 5: substring()
+        System.out.println("Test 5 - substring():");
+        MyStringBuilder2 sb4 = new MyStringBuilder2("Hello World");
+        System.out.println("  Original: \"" + sb4 + "\"");
+        MyStringBuilder2 sub = sb4.substring(6);
+        System.out.println("  substring(6): \"" + sub + "\"");
+        MyStringBuilder2 sub2 = sb4.substring(0);
+        System.out.println("  substring(0): \"" + sub2 + "\"");
+        System.out.println();
+
+        // Test 6: toUpperCase()
+        System.out.println("Test 6 - toUpperCase():");
+        MyStringBuilder2 sb5 = new MyStringBuilder2("Hello World 123!");
+        System.out.println("  Before: \"" + sb5 + "\"");
+        sb5.toUpperCase();
+        System.out.println("  After:  \"" + sb5 + "\"");
+        System.out.println();
+
+        // Test 7: Method chaining
+        System.out.println("Test 7 - Method chaining:");
+        MyStringBuilder2 sb6 = new MyStringBuilder2("java");
+        sb6.insert(4, new MyStringBuilder2(" programming")).reverse().toUpperCase();
+        System.out.println("  sb6.insert(4, \" programming\").reverse().toUpperCase()");
+        System.out.println("  Result: \"" + sb6 + "\"");
+        System.out.println();
+
+        // Test 8: Edge cases
+        System.out.println("Test 8 - Edge cases:");
+        
+        MyStringBuilder2 empty = new MyStringBuilder2();
+        System.out.println("  Empty constructor: \"" + empty + "\"");
+        
+        MyStringBuilder2 sb7 = new MyStringBuilder2("test");
+        sb7.insert(10, new MyStringBuilder2("invalid"));
+        System.out.println("  Invalid insert offset (10): \"" + sb7 + "\"");
+        
+        MyStringBuilder2 sb8 = new MyStringBuilder2("test");
+        MyStringBuilder2 invalidSub = sb8.substring(10);
+        System.out.println("  Invalid substring begin (10): \"" + invalidSub + "\"");
+        
+        System.out.println("\n=== All tests completed ===");
+    }
+}
